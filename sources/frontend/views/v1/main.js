@@ -17,8 +17,18 @@ $(document).ready(function() {
 
     const Sleep = (milliseconds) => new Promise( (onTimeout) => setTimeout(onTimeout, milliseconds) )
 
+    window.data = []
 
     $('#data-collect').click(() => {
+        $('#date').val('')
+        $('#f1'  ).val('')
+        $('#f2'  ).val('')
+        $('#f3'  ).val('')
+        $('#f4'  ).val('')
+        $('#f5'  ).val('')
+        $('#f6'  ).val('')
+        $('#f7'  ).val('')
+
         $('#data-form').modal('show')
     })
 
@@ -59,7 +69,7 @@ $(document).ready(function() {
     $('#save').click( () => {
         $('#data-form').modal('hide')
 
-        data.push({
+        window.data.push({
             'date'            : $('#date').val(),
             'time-bed'        : $('#f1'  ).val(),
             'time-lights'     : $('#f2'  ).val(),
