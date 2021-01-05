@@ -2,8 +2,30 @@
 $(document).ready(function() {
     const data = []
 
+    const Sleep = (milliseconds) => new Promise( (onTimeout) => setTimeout(onTimeout, milliseconds) )
+
+
     $('#data-collect').click(() => {
         $('#data-form').modal('show')
+    })
+
+    $('#data-export').click(async () => {
+        const lines = []
+
+        for(line of data)
+        {
+            const fields = []
+            for(field in line) fields.push(line[field])
+            lines.push(fields.join(','))
+        }
+
+        const file = $('<a></a>')
+                        .attr('href',     'data:text/plain;charset=utf-8,' + encodeURIComponent(lines.join('\n')))
+                        .attr('download', 'condor-data.csv')
+                        .attr('rel',      '_blank')
+        
+        await Sleep(100)
+        file[0].click()
     })
 
     ///*
