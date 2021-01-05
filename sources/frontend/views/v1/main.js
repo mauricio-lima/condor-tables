@@ -1,6 +1,19 @@
 
 $(document).ready(function() {
-    const data = []
+    function LoadDataset(name = 'default')
+    {
+        if ( !localStorage.getItem('datasets') )
+            return
+             
+        const datasets = JSON.parse(localStorage.getItem('datasets'))
+        if (!datasets[name])
+            return
+
+        window.data = datasets[name]
+        $('#data-table')
+            .bootstrapTable('destroy')
+            .bootstrapTable( { data : window.data } )
+    }
 
     const Sleep = (milliseconds) => new Promise( (onTimeout) => setTimeout(onTimeout, milliseconds) )
 
@@ -64,15 +77,15 @@ $(document).ready(function() {
         console.log(JSON.stringify(data))
     })
 
-    
+    const parameters = new URLSearchParams(window.location.search)
+    LoadDataset(parameters.has('dataset') ? parameters.get('dataset') : 'default')
 
+    $(document).keydown( (e) => {
+        if (e.defaultPrevented)
+            return
 
-        $(document).keydown( (e) => {
-            if (e.defaultPrevented)
-                return
-
-            if ( (e.shiftKey) && (e.key == 'F')) 
-            {
+        if ( (e.shiftKey) && (e.key == 'F')) 
+        {
                 e.preventDefault()
 
                 $('#date').val('06-01-2021')
@@ -83,7 +96,10 @@ $(document).ready(function() {
                 $('#f5'  ).val(33)
                 $('#f6'  ).val( '7:02')
                 $('#f7'  ).val('07:15')
-            }
-        })
+        }
+    })
+
+
+    
 })
 
