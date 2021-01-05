@@ -1,5 +1,12 @@
 
 $(document).ready(function() {
+    function UpdateData()
+    {
+        $('#data-table')
+            .bootstrapTable('destroy')
+            .bootstrapTable( { data : window.data } )
+    }
+
     function LoadDataset(name = 'default')
     {
         if ( !localStorage.getItem('datasets') )
@@ -10,9 +17,7 @@ $(document).ready(function() {
             return
 
         window.data = datasets[name]
-        $('#data-table')
-            .bootstrapTable('destroy')
-            .bootstrapTable( { data : window.data } )
+        UpdateData()
     }
 
     const Sleep = (milliseconds) => new Promise( (onTimeout) => setTimeout(onTimeout, milliseconds) )
@@ -51,6 +56,11 @@ $(document).ready(function() {
         file[0].click()
     })
 
+    $('#data-clear').click(async () => {
+        data = []
+        UpdateData()
+    })
+
     ///*
     $('#date').datepicker({
         format: 'dd-mm-yyyy',
@@ -80,11 +90,7 @@ $(document).ready(function() {
             'time-wakeup'     : $('#f7'  ).val(),
             'interval-sleep'  : 0
         })
-        $('#data-table')
-            .bootstrapTable(  'destroy'      )
-            .bootstrapTable( { data : data } )
-
-        console.log(JSON.stringify(data))
+        UpdateData()
     })
 
     const parameters = new URLSearchParams(window.location.search)
