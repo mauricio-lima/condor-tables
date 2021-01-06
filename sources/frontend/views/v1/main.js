@@ -14,19 +14,12 @@ $(document).ready(function() {
         $('#time-sleep'     ).text(MeanDeviationFormat(...mean( values.map( item => item['time-sleep'     ]))))
         $('#awakes'         ).text(MeanDeviationFormat(...mean( values.map( item => item['awakes'         ]))))
         $('#interval-awaked').text(MeanDeviationFormat(...mean( values.map( item => item['interval-awaked']))))
-
     }
 
     function InputDialogShow()
     {
         $('#date').val('')
-        $('#f1'  ).val('')
-        $('#f2'  ).val('')
-        $('#f3'  ).val('')
-        $('#f4'  ).val('')
-        $('#f5'  ).val('')
-        $('#f6'  ).val('')
-        $('#f7'  ).val('')
+        InputDialogSetFields()
 
         if ( $('#data-form').is(':visible') )
             return
@@ -34,6 +27,33 @@ $(document).ready(function() {
         $('#data-form').modal('show')
     }
 
+
+    function InputDialogSetFields()
+    {
+        const result = window.data[$('#date').val()]
+        if (!result)
+        {
+            //$('#date').val('')
+            $('#f1'  ).val('')
+            $('#f2'  ).val('')
+            $('#f3'  ).val('')
+            $('#f4'  ).val('')
+            $('#f5'  ).val('')
+            $('#f6'  ).val('')
+            $('#f7'  ).val('')
+    
+            return
+        }
+
+        $('#f1'  ).val(result['time-bed'])
+        $('#f2'  ).val(result['time-lights'])
+        $('#f3'  ).val(result['time-sleep'])
+        $('#f4'  ).val(result['awakes'])
+        $('#f5'  ).val(result['interval-awaked'])
+        $('#f6'  ).val(result['time-awake'])
+        $('#f7'  ).val(result['time-wakeup'])
+        //'interval-sleep'  : 0
+    }
 
     function LoadDataset(name = 'default')
     {
@@ -124,14 +144,16 @@ $(document).ready(function() {
         UpdateData()
     })
 
-    $('#date').datepicker({
-        format         : 'dd-mm-yyyy',
-        todayHighlight :  true,
-        toggleActive   :  true,
-        language       : 'pt-BR',
-        autoclose      :  true,
-        container      : $('#container')
-    });
+    $('#date')
+        .datepicker({
+            format         : 'dd-mm-yyyy',
+            todayHighlight :  true,
+            toggleActive   :  true,
+            language       : 'pt-BR',
+            autoclose      :  true,
+            container      : $('#container')
+        })
+        .change( InputDialogSetFields )
    
     $('#save').click( () => {
         $('#data-form').modal('hide')
