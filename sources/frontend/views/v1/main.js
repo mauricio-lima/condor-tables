@@ -148,7 +148,7 @@ $(document).ready(function() {
         if (e.defaultPrevented)
             return
 
-        if ( (e.shiftKey) && (e.key == 'F')) 
+        if ( e.shiftKey && !e.ctrlKey && !e.altKey && (e.key == 'F')) 
         {
                 e.preventDefault()
 
