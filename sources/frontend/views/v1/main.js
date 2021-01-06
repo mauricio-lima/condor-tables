@@ -88,7 +88,6 @@ $(document).ready(function() {
 
     const Sleep = (milliseconds) => new Promise( (onTimeout) => setTimeout(onTimeout, milliseconds) )
 
-    window.data = []
 
     $('#data-collect').click(() => {
         InputDialogShow()
@@ -114,25 +113,19 @@ $(document).ready(function() {
     })
 
     $('#data-clear').click(async () => {
-        data = []
+        window.data = []
         UpdateData()
     })
 
-    ///*
     $('#date').datepicker({
-        format: 'dd-mm-yyyy',
-        todayHighlight: true,
-        toggleActive: true,
-        language: 'pt-BR',
-        autoclose : true,
-        container : $('#container')
+        format         : 'dd-mm-yyyy',
+        todayHighlight : true,
+        toggleActive   : true,
+        language       : 'pt-BR',
+        autoclose      : true,
+        container      : $('#container')
     });
-
-    $('#data-table').bootstrapTable()
-
-    // End of initalizations
    
-
     $('#save').click( () => {
         $('#data-form').modal('hide')
 
@@ -150,8 +143,6 @@ $(document).ready(function() {
         UpdateData()
     })
 
-    const parameters = new URLSearchParams(window.location.search)
-    LoadDataset(parameters.has('dataset') ? parameters.get('dataset') : 'default')
 
     $(document).keydown( (e) => {
         if (e.code == 'KeyF') 
@@ -173,7 +164,7 @@ $(document).ready(function() {
             $('#f7'  ).val('07:15')
         }
 
-        if (e.code == 'KeyI')                           // I
+        if (e.code == 'KeyI')                          // I
         {
             if (e.shiftKey && !e.ctrlKey && e.altKey)  //  Only Ctrl together
                 return
@@ -183,7 +174,11 @@ $(document).ready(function() {
         }
     })
 
+    const parameters = new URLSearchParams(window.location.search)
+    LoadDataset(parameters.has('dataset') ? parameters.get('dataset') : 'default')
 
+    $('#data-table').bootstrapTable()
+    window.data = []
     
 })
 
