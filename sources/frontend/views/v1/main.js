@@ -45,14 +45,14 @@ $(document).ready(function() {
             return
         }
 
-        $('#f1'  ).val(result['time-bed'])
-        $('#f2'  ).val(result['time-lights'])
-        $('#f3'  ).val(result['time-sleep'])
-        $('#f4'  ).val(result['awakes'])
+        $('#f1'  ).val(result['time-bed'       ])
+        $('#f2'  ).val(result['time-lights'    ])
+        $('#f3'  ).val(result['time-sleep'     ])
+        $('#f4'  ).val(result['awakes'         ])
         $('#f5'  ).val(result['interval-awaked'])
-        $('#f6'  ).val(result['time-awake'])
-        $('#f7'  ).val(result['time-wakeup'])
-        //'interval-sleep'  : 0
+        $('#f6'  ).val(result['time-awake'     ])
+        $('#f7'  ).val(result['time-wakeup'    ])
+        $('#f8'  ).val(result['interval-sleep' ])
     }
 
     function LoadDataset(name = 'default')
@@ -169,7 +169,7 @@ $(document).ready(function() {
             'interval-awaked' : parseInt($('#f5').val()),
             'time-awake'      : $('#f6'  ).val(),
             'time-wakeup'     : $('#f7'  ).val(),
-            'interval-sleep'  : 0
+            'interval-sleep'  : $('#f8'  ).val()
         }
         UpdateData()
     })
@@ -205,8 +205,13 @@ $(document).ready(function() {
         }
     })
 
-
-    $('#data-table').bootstrapTable()
+    $('#data-table').bootstrapTable({  
+        columns : [
+            { align : 'center' }, { align : 'center' }, { align : 'center' },
+            { align : 'center' }, { align : 'center' }, { align : 'center' }, 
+            { align : 'center' }, { align : 'center' }, { align : 'center' }
+        ]
+    }) 
 
     window.data = {}
     
