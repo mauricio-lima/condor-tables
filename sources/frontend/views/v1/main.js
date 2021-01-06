@@ -2,14 +2,18 @@
 $(document).ready(function() {
     function UpdateData()
     {
+        values = []
+        for(const [key, value] of Object.entries(window.data))
+        {
+            values.push(value)
+        }
         $('#data-table')
             .bootstrapTable('destroy')
-            .bootstrapTable( { data : window.data } )
+            .bootstrapTable( { data : values } )
 
-        const x = 
-        $('#time-sleep'     ).text(MeanDeviationFormat(...mean( window.data.map( item => item['time-sleep'     ]))))
-        $('#awakes'         ).text(MeanDeviationFormat(...mean( window.data.map( item => item['awakes'         ]))))
-        $('#interval-awaked').text(MeanDeviationFormat(...mean( window.data.map( item => item['interval-awaked']))))
+        $('#time-sleep'     ).text(MeanDeviationFormat(...mean( values.map( item => item['time-sleep'     ]))))
+        $('#awakes'         ).text(MeanDeviationFormat(...mean( values.map( item => item['awakes'         ]))))
+        $('#interval-awaked').text(MeanDeviationFormat(...mean( values.map( item => item['interval-awaked']))))
 
     }
 
@@ -40,7 +44,10 @@ $(document).ready(function() {
         if (!datasets[name])
             return
 
-        window.data = datasets[name]
+        for(const value of datasets[name])
+        {
+            window.data[value.date] = new Information(value)
+        }
         UpdateData()
     }
 
@@ -119,27 +126,29 @@ $(document).ready(function() {
 
     $('#date').datepicker({
         format         : 'dd-mm-yyyy',
-        todayHighlight : true,
-        toggleActive   : true,
+        todayHighlight :  true,
+        toggleActive   :  true,
         language       : 'pt-BR',
-        autoclose      : true,
+        autoclose      :  true,
         container      : $('#container')
     });
    
     $('#save').click( () => {
         $('#data-form').modal('hide')
 
-        window.data.push({
-            'date'            : $('#date').val(),
+        let date = $('#date').val()
+        
+        window.data[date] = {
+            'date'            : date,
             'time-bed'        : $('#f1'  ).val(),
             'time-lights'     : $('#f2'  ).val(),
-            'time-sleep'      : $('#f3'  ).val(),
+            'time-sleep'      : parseInt($('#f3').val()),
             'awakes'          : parseInt($('#f4').val()),
             'interval-awaked' : parseInt($('#f5').val()),
             'time-awake'      : $('#f6'  ).val(),
             'time-wakeup'     : $('#f7'  ).val(),
             'interval-sleep'  : 0
-        })
+        }
         UpdateData()
     })
 
@@ -174,11 +183,31 @@ $(document).ready(function() {
         }
     })
 
-    const parameters = new URLSearchParams(window.location.search)
-    LoadDataset(parameters.has('dataset') ? parameters.get('dataset') : 'default')
 
     $('#data-table').bootstrapTable()
-    window.data = []
+
+    window.data = {}
+    
+    const Information = function(value) {
+        return new Proxy(value, {
+            set: function(target, property, value) {
+                let changed
+
+                changed = false
+                if (target[property] != value)
+                {
+                    target[property] = value
+                    changed = true
+                    UpdateData()
+                }
+                    
+                //console.log('set : ', 'property <' + prop + '> with value <' + newval + '>')
+            }
+        })
+    } 
+
+    const parameters = new URLSearchParams(window.location.search)
+    LoadDataset(parameters.has('dataset') ? parameters.get('dataset') : 'default')
     
 })
 
