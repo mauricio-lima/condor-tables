@@ -25,10 +25,7 @@ $(document).ready(function() {
         $('#f7'  ).val('')
 
         if ( $('#data-form').is(':visible') )
-        {
-            alert('ignore')
             return
-        }
             
         $('#data-form').modal('show')
     }
@@ -157,10 +154,11 @@ $(document).ready(function() {
     LoadDataset(parameters.has('dataset') ? parameters.get('dataset') : 'default')
 
     $(document).keydown( (e) => {
-        console.log('key : <' + e.code + ' >')
-
-        if ( e.shiftKey && !e.ctrlKey && !e.altKey && (e.key == 'F')) 
+        if (e.code == 'KeyF') 
         {
+            if (!e.shiftKey && e.ctrlKey && e.altKey)
+                return
+
             if (e.defaultPrevented)
                 return
                 
@@ -175,13 +173,13 @@ $(document).ready(function() {
             $('#f7'  ).val('07:15')
         }
 
-        if (e.code == 'KeyI')                               // I
+        if (e.code == 'KeyI')                           // I
         {
-            if (!e.shiftKey && e.ctrlKey && !e.altKey)  // Ctrl+I
-            {
-                e.preventDefault()
-                InputDialogShow()
-            }
+            if (e.shiftKey && !e.ctrlKey && e.altKey)  //  Only Ctrl together
+                return
+
+            e.preventDefault()
+            InputDialogShow()
         }
     })
 
