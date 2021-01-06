@@ -13,6 +13,27 @@ $(document).ready(function() {
 
     }
 
+    function InputDialogShow()
+    {
+        $('#date').val('')
+        $('#f1'  ).val('')
+        $('#f2'  ).val('')
+        $('#f3'  ).val('')
+        $('#f4'  ).val('')
+        $('#f5'  ).val('')
+        $('#f6'  ).val('')
+        $('#f7'  ).val('')
+
+        if ( $('#data-form').is(':visible') )
+        {
+            alert('ignore')
+            return
+        }
+            
+        $('#data-form').modal('show')
+    }
+
+
     function LoadDataset(name = 'default')
     {
         if ( !localStorage.getItem('datasets') )
@@ -73,16 +94,7 @@ $(document).ready(function() {
     window.data = []
 
     $('#data-collect').click(() => {
-        $('#date').val('')
-        $('#f1'  ).val('')
-        $('#f2'  ).val('')
-        $('#f3'  ).val('')
-        $('#f4'  ).val('')
-        $('#f5'  ).val('')
-        $('#f6'  ).val('')
-        $('#f7'  ).val('')
-
-        $('#data-form').modal('show')
+        InputDialogShow()
     })
 
     $('#data-export').click(async () => {
@@ -145,21 +157,31 @@ $(document).ready(function() {
     LoadDataset(parameters.has('dataset') ? parameters.get('dataset') : 'default')
 
     $(document).keydown( (e) => {
-        if (e.defaultPrevented)
-            return
+        console.log('key : <' + e.code + ' >')
 
         if ( e.shiftKey && !e.ctrlKey && !e.altKey && (e.key == 'F')) 
         {
-                e.preventDefault()
+            if (e.defaultPrevented)
+                return
+                
+            e.preventDefault()
+            $('#date').val('06-01-2021')
+            $('#f1'  ).val('23:00')
+            $('#f2'  ).val('23:15')
+            $('#f3'  ).val('?')
+            $('#f4'  ).val(5)
+            $('#f5'  ).val(33)
+            $('#f6'  ).val( '7:02')
+            $('#f7'  ).val('07:15')
+        }
 
-                $('#date').val('06-01-2021')
-                $('#f1'  ).val('23:00')
-                $('#f2'  ).val('23:15')
-                $('#f3'  ).val('?')
-                $('#f4'  ).val(5)
-                $('#f5'  ).val(33)
-                $('#f6'  ).val( '7:02')
-                $('#f7'  ).val('07:15')
+        if (e.code == 'KeyI')                               // I
+        {
+            if (!e.shiftKey && e.ctrlKey && !e.altKey)  // Ctrl+I
+            {
+                e.preventDefault()
+                InputDialogShow()
+            }
         }
     })
 
