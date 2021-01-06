@@ -7,9 +7,17 @@ $(document).ready(function() {
         {
             values.push(value)
         }
+        const sequence = {
+            'time-sleep'      : values.map( item => item['time-sleep'     ]),
+            'awakes'          : values.map( item => item['awakes'         ]),
+            'interval-awaked' : values.map( item => item['interval-awaked'])
+        }
+
         $('#data-table')
             .bootstrapTable('destroy')
             .bootstrapTable( { data : values } )
+
+        ChartSetup(sequence['time-sleep'], sequence['awakes'], sequence['interval-awaked'].map(item => item / 60))
 
         $('#time-sleep'     ).text(MeanDeviationFormat(...mean( values.map( item => item['time-sleep'     ]))))
         $('#awakes'         ).text(MeanDeviationFormat(...mean( values.map( item => item['awakes'         ]))))
@@ -26,7 +34,6 @@ $(document).ready(function() {
             
         $('#data-form').modal('show')
     }
-
 
     function InputDialogSetFields()
     {
@@ -69,6 +76,89 @@ $(document).ready(function() {
             window.data[value.date] = new Information(value)
         }
         UpdateData()
+    }
+
+    function ChartSetup(a, b, c)
+    {
+        var dom = document.getElementById("container");
+        var myChart = echarts.init(dom);
+        var app = {};
+    
+        const option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                type: 'cross',
+                    crossStyle: {
+                    color: '#999'
+                }
+            }
+        },
+        toolbox: {
+            feature: {
+                //dataView: {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        legend: {
+            data: ['Tempo para iniciar o sono', 'Tempo acordado', 'Quanto tempo dormiu']
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data: Object.keys(window.data),
+                axisPointer: {
+                    type: 'shadow'
+                }
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                name: 'Horas',
+                min: 0,
+                max      : 14,
+                interval : 2,
+                axisLabel: {
+                formatter: '{value} h'
+                }
+            },
+            {
+                type      : 'value',
+            name      : 'Quantidade',
+            min       : 0,
+            max       : 21,
+            interval  :  3,
+            axisLabel : {
+                formatter: '{value}'
+            }
+        }
+    ],
+    series: [
+        {
+            name: 'Tempo para iniciar o sono',
+            type: 'bar',
+            data:  a
+        },
+        {
+            name: 'Tempo acordado',
+            type: 'bar',
+            data:  b
+        },
+        {
+            name: 'Quanto tempo dormiu',
+            type: 'line',
+            yAxisIndex: 1,
+            data:  c
+        }
+    ]
+}
+
+        if (option && typeof option === "object") {
+            myChart.setOption(option, true);
+        }
     }
 
 
