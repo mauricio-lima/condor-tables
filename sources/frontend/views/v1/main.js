@@ -5,6 +5,12 @@ $(document).ready(function() {
         $('#data-table')
             .bootstrapTable('destroy')
             .bootstrapTable( { data : window.data } )
+
+        const x = 
+        $('#time-sleep'     ).text(MeanDeviationFormat(...mean( window.data.map( item => item['time-sleep'     ]))))
+        $('#awakes'         ).text(MeanDeviationFormat(...mean( window.data.map( item => item['awakes'         ]))))
+        $('#interval-awaked').text(MeanDeviationFormat(...mean( window.data.map( item => item['interval-awaked']))))
+
     }
 
     function LoadDataset(name = 'default')
@@ -19,6 +25,48 @@ $(document).ready(function() {
         window.data = datasets[name]
         UpdateData()
     }
+
+
+    function MeanDeviationFormat( mean, deviation, precision = 1)
+    {
+        const factor = Math.pow(10, precision)
+        let   pair
+
+        pair = [mean, deviation].map( value => Math.round(value * factor) / factor)
+        return pair[0] + '\u00b1' + pair[1]
+    }
+
+    function mean(values)
+    {
+        let sum
+        let mean
+        let deviation
+
+        sum = 0
+        count = 0
+        for(let value of values)
+        {
+            if ( ((value == 0) && (!value)) || isNaN(value) )
+                continue
+
+            sum += value
+            count++
+        }
+        mean = sum / count
+        
+        sum = 0
+        for(let value of values)
+        {
+            if ( ((value == 0) && (!value)) || isNaN(value) )
+                continue
+
+            sum += (value - mean) * (value - mean)
+        }
+        deviation = Math.sqrt(sum / (count - 1))
+
+        return [mean, deviation]
+    }
+
 
     const Sleep = (milliseconds) => new Promise( (onTimeout) => setTimeout(onTimeout, milliseconds) )
 
